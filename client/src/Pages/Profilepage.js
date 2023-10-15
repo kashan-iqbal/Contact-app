@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React  from "react";
 import Avatar from "@mui/material/Avatar";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
@@ -10,7 +10,6 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate } from "react-router-dom";
-import { UserContext } from "../Context/UserContext";
 function Copyright(props) {
   return (
     <Typography
@@ -43,22 +42,17 @@ export default function Profilepage() {
     });
   };
 
-  const { userData } = useContext(UserContext);
-  console.log(userData);
-  const navigate = useNavigate();
+  // console.log(userData);
+  const navigate = useNavigate()
 
   const handleBack = () => {
     navigate(-1);
   };
+   const proflieData = JSON.parse(localStorage.getItem('userData'))
 
-  const profilt = {
-    name: "kashan",
-    lastName: "iqbal",
-    email: "kashan33@gamil.com",
-    phone: "03198167101",
-    numOfcont: "12",
-    favorite: "4",
-  };
+   console.log(proflieData);
+
+
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -103,7 +97,7 @@ export default function Profilepage() {
                     readOnly: true,
                   }}
                   variant="outlined"
-                  value={userData.username}
+                  value={proflieData.username}
                 />
               </Grid>
               <Grid item xs={6} sm={6}>
@@ -114,7 +108,7 @@ export default function Profilepage() {
                   name="lastName"
                   autoComplete="family-name"
                   label="Last Name"
-                  value={userData.usernamelast}
+                  value={proflieData.usernamelast}
                   inputProps={{
                     readOnly: true,
                   }}
@@ -128,7 +122,7 @@ export default function Profilepage() {
                   name="email"
                   label="E-mail"
                   autoComplete="email"
-                  value={userData.email}
+                  value={proflieData.email}
                   inputProps={{
                     readOnly: true,
                   }}
@@ -145,7 +139,7 @@ export default function Profilepage() {
                   id="password"
                   label="Phone Number"
                   autoComplete="new-password"
-                  value={userData.phoneNumber}
+                  value={proflieData.phoneNumber}
                   inputProps={{
                     readOnly: true,
                   }}
@@ -163,7 +157,7 @@ export default function Profilepage() {
                   InputProps={{
                     readOnly: true,
                   }}
-                  value={profilt.numOfcont}
+                  value={12}
                 />
               </Grid>
               <Grid item xs={6}>
@@ -178,7 +172,7 @@ export default function Profilepage() {
                   InputProps={{
                     readOnly: true,
                   }}
-                  value={profilt.favorite}
+                  value={12}
                 />
               </Grid>
             </Grid>

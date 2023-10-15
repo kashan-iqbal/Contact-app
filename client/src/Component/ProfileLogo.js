@@ -17,6 +17,8 @@ import "react-toastify/dist/ReactToastify.css";
 
 export default function ProfileLogo() {
   const [anchorEl, setAnchorEl] = React.useState(null);
+
+
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -25,16 +27,18 @@ export default function ProfileLogo() {
     setAnchorEl(null);
   };
 
-  const Navigate = useNavigate();
-
+  const getUserData= JSON.parse(localStorage.getItem("userData"))
+  const logoName =  getUserData && getUserData.username? getUserData.username.charAt(0).toUpperCase(): " "
+ const Navigate = useNavigate();
+ 
   const logout = () => {
     localStorage.clear();
-    setTimeout(()=>{
+    setTimeout(() => {
       Navigate("/login");
-    },2000)
-    toast.success("logout successFully")
+    }, 2000);
+    toast.success("logout successFully");
   };
-
+ 
   return (
     <React.Fragment>
       <Box sx={{ display: "flex", alignItems: "center", textAlign: "center" }}>
@@ -47,8 +51,10 @@ export default function ProfileLogo() {
             aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}
           >
-            <ToastContainer/>
-            <Avatar sx={{ width: 32, height: 32, bgcolor: "green" }}>M</Avatar>
+            <ToastContainer />
+            <Avatar sx={{ width: 32, height: 32, bgcolor: "green" }}>
+              {logoName}
+            </Avatar>
           </IconButton>
         </Tooltip>
       </Box>

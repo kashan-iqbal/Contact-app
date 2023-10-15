@@ -8,7 +8,7 @@ const asyncHandler = require("express-async-handler");
 
 const getAllContacts = async (req, res) => {
   try {
-    const contact = await Contacts.find({ user_id: req.user.id });
+    const contact = await Contacts.find({ user_id: req.user.id }).sort("name")
     res.status(201).json(contact);
   } catch (err) {
     console.log(err);
@@ -132,7 +132,6 @@ const deleteContacts = asyncHandler(async (req, res) => {
       return;
     }
     const contact = await Contacts.deleteOne({ _id: id });
-
     res.status(201).json(contact);
   } catch (err) {
     console.log(err);

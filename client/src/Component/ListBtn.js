@@ -1,14 +1,8 @@
-import * as React from 'react';
-import IconButton from '@mui/material/IconButton';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-
-const options = [
-  'Edit',
-  'Favorite',
-  'Delete'
-];
+import * as React from "react";
+import IconButton from "@mui/material/IconButton";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 const ITEM_HEIGHT = 48;
 
@@ -22,13 +16,18 @@ export default function ListBtn() {
     setAnchorEl(null);
   };
 
+  const deleteHandeler = () => {
+    console.log('fs')
+
+    handleClose();
+  };
   return (
     <div>
       <IconButton
         aria-label="more"
         id="long-button"
-        aria-controls={open ? 'long-menu' : undefined}
-        aria-expanded={open ? 'true' : undefined}
+        aria-controls={open ? "long-menu" : undefined}
+        aria-expanded={open ? "true" : undefined}
         aria-haspopup="true"
         onClick={handleClick}
       >
@@ -37,7 +36,7 @@ export default function ListBtn() {
       <Menu
         id="long-menu"
         MenuListProps={{
-          'aria-labelledby': 'long-button',
+          "aria-labelledby": "long-button",
         }}
         anchorEl={anchorEl}
         open={open}
@@ -45,15 +44,13 @@ export default function ListBtn() {
         PaperProps={{
           style: {
             maxHeight: ITEM_HEIGHT * 4.5,
-            width: '20ch',
+            width: "20ch",
           },
         }}
       >
-        {options.map((option) => (
-          <MenuItem key={option} selected={option === 'Pyxis'} onClick={handleClose}>
-            {option}
-          </MenuItem>
-        ))}
+        <MenuItem onClick={handleClose}>Edit</MenuItem>
+        <MenuItem onClick={deleteHandeler}>Delete</MenuItem>
+        <MenuItem onClick={handleClose}>Favorite</MenuItem>
       </Menu>
     </div>
   );

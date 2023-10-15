@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, {  useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -13,7 +13,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink,  useNavigate } from "react-router-dom";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import LoadingTime from "../../Uitls/Loading";
 import axios from "axios";
@@ -26,7 +26,6 @@ import {
   InputLabel,
   OutlinedInput,
 } from "@mui/material";
-import { UserContext } from "../../Context/UserContext";
 
 
 
@@ -59,11 +58,11 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
+
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
 
-  const { setUserData } = useContext(UserContext);
 
   const Navigate = useNavigate();
   const handleSubmit = async (event) => {
@@ -71,12 +70,18 @@ export default function Login() {
     setLoading(true);
     try {
       const responce = await axios.post("/api/user/login", { email, password });
+      const {data} = responce
       toast.success("login successfully");
       setTimeout(() => {
         Navigate("/Home");
       }, 1000);
-      const { data } = responce;
-      setUserData(data.user);
+      console.log(data.user);
+      const User = data.user
+        const updatedUser={
+          ...User,
+          password:undefined
+        }
+      localStorage.setItem("userData",JSON.stringify(updatedUser))
       localStorage.setItem("token", data.accessToken);
       setLoading(false);
     } catch (error) {

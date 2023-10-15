@@ -51,25 +51,30 @@ export default function AddContacts() {
       phone,
       relation,
     };
-    try {
-      setLoading(true)
-      const responce = await axios.post("/api/contact/", data, {
-        headers: {
-          "Content-Type": "application/json",
-          authorization: `Bearer ${token}`,
-        },
-      });
-      console.log("Responce", responce);
-      setName("");
-      setEmail("");
-      setPhone("");
-      setRelation("");
-      toast.success("Contact created");
-      setLoading(false)
-    } catch (error) {
-      console.log(error);
-      toast.error("some thing weng wrong");
-      setLoading(false)
+    if(phone.length !== 11 ){
+      alert ("Number should be 11 digit")
+    }else{
+      try {
+        setLoading(true)
+        const responce = await axios.post("/api/contact/", data, {
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${token}`,
+          },
+        });
+        console.log("Responce", responce);
+        setName("");
+        setEmail("");
+        setPhone("");
+        setRelation("");
+        toast.success("Contact created");
+        setLoading(false)
+      } catch (error) {
+        console.log(error);
+        toast.error("some thing weng wrong");
+        setLoading(false)
+      }
+
     }
   };
 
