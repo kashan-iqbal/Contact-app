@@ -75,7 +75,6 @@ export default function Login() {
       setTimeout(() => {
         Navigate("/Home");
       }, 1000);
-      console.log(data.user);
       const User = data.user
         const updatedUser={
           ...User,

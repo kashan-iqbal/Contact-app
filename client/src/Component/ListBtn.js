@@ -3,10 +3,12 @@ import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import Dailogbox from "./DailogBox";
+import FullScreenDialog from "./EditModal";
 
 const ITEM_HEIGHT = 48;
 
-export default function ListBtn() {
+export default function ListBtn({ data }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -16,11 +18,6 @@ export default function ListBtn() {
     setAnchorEl(null);
   };
 
-  const deleteHandeler = () => {
-    console.log('fs')
-
-    handleClose();
-  };
   return (
     <div>
       <IconButton
@@ -48,8 +45,8 @@ export default function ListBtn() {
           },
         }}
       >
-        <MenuItem onClick={handleClose}>Edit</MenuItem>
-        <MenuItem onClick={deleteHandeler}>Delete</MenuItem>
+        <FullScreenDialog closeFunc={handleClose} data={data} />
+        <Dailogbox closeFunc={handleClose} data={data} />
         <MenuItem onClick={handleClose}>Favorite</MenuItem>
       </Menu>
     </div>

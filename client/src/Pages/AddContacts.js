@@ -13,7 +13,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Layout from "../Component/Layout";
 import LoadingTime from "../Uitls/Loading";
-
+import { UserContextuse } from "../Context/ContactsContext";
 function Copyright(props) {
   return (
     <Typography
@@ -42,6 +42,9 @@ export default function AddContacts() {
   const [phone, setPhone] = useState("");
   const [relation, setRelation] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const { dispatch } = UserContextuse();
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const token = localStorage.getItem("token");
@@ -51,11 +54,11 @@ export default function AddContacts() {
       phone,
       relation,
     };
-    if(phone.length !== 11 ){
-      alert ("Number should be 11 digit")
-    }else{
+    if (phone.length !== 11) {
+      alert("Number should be 11 digit");
+    } else {
       try {
-        setLoading(true)
+        setLoading(true);
         const responce = await axios.post("/api/contact/", data, {
           headers: {
             "Content-Type": "application/json",
@@ -63,18 +66,24 @@ export default function AddContacts() {
           },
         });
         console.log("Responce", responce);
+        if (responce && responce) {
+          const { data } = responce;
+
+          if (data && data) {
+            dispatch({ type: "Add_Contacts", payload: data });
+          }
+        }
         setName("");
         setEmail("");
         setPhone("");
         setRelation("");
         toast.success("Contact created");
-        setLoading(false)
+        setLoading(false);
       } catch (error) {
         console.log(error);
         toast.error("some thing weng wrong");
-        setLoading(false)
+        setLoading(false);
       }
-
     }
   };
 
@@ -91,17 +100,17 @@ export default function AddContacts() {
               alignItems: "center",
             }}
           >
-            <ToastContainer 
-                 position="top-center"
-                 autoClose={2000}
-                 hideProgressBar={false}
-                 newestOnTop={false}
-                 closeOnClick
-                 rtl={false}
-                 pauseOnFocusLoss
-                 draggable
-                 pauseOnHover
-                 theme="dark"
+            <ToastContainer
+              position="top-center"
+              autoClose={2000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="dark"
             />
             <Typography component="h1" variant="h5" sx={{ fontWeight: "600" }}>
               Create Contacts
