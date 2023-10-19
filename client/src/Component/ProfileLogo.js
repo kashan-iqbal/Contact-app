@@ -14,10 +14,11 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useUserContext } from "../Context/UserContext";
 
 export default function ProfileLogo() {
   const [anchorEl, setAnchorEl] = React.useState(null);
-
+  const { User } = useUserContext();
 
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -27,10 +28,10 @@ export default function ProfileLogo() {
     setAnchorEl(null);
   };
 
-  const getUserData= JSON.parse(localStorage.getItem("userData"))
-  const logoName =  getUserData && getUserData.username? getUserData.username.charAt(0).toUpperCase(): " "
- const Navigate = useNavigate();
- 
+  const logoName =
+    User && User.username ? User.username.charAt(0).toUpperCase() : " ";
+  const Navigate = useNavigate();
+
   const logout = () => {
     localStorage.clear();
     setTimeout(() => {
@@ -38,7 +39,7 @@ export default function ProfileLogo() {
     }, 2000);
     toast.success("logout successFully");
   };
- 
+
   return (
     <React.Fragment>
       <Box sx={{ display: "flex", alignItems: "center", textAlign: "center" }}>

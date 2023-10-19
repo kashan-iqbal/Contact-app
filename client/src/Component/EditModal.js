@@ -1,10 +1,6 @@
 import * as React from "react";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
-import ListItemText from "@mui/material/ListItemText";
-import ListItem from "@mui/material/ListItem";
-import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
@@ -16,23 +12,26 @@ import {
   Container,
   CssBaseline,
   Grid,
+  MenuItem,
   TextField,
   ThemeProvider,
   createTheme,
 } from "@mui/material";
 import LoadingTime from "../Uitls/Loading";
 import axios from "axios";
+import { UserContextuse } from "../Context/ContactsContext";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function FullScreenDialog({ data }) {
+export default function FullScreenDialog({closeFunc , data }) {
   const [open, setOpen] = React.useState(false);
-  const [name, setName] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [phone, setPhone] = React.useState("");
+  const [name, setName] = React.useState(data.name);
+  const [email, setEmail] = React.useState(data.email);
+  const [phone, setPhone] = React.useState(data.phone);
   const [relation, setRelation] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
 
   const handleClickOpen = () => {
     console.log(data);
@@ -41,22 +40,30 @@ export default function FullScreenDialog({ data }) {
 
   const handleClose = () => {
     setOpen(false);
+    closeFunc()
+
   };
+  const { dispatch } = UserContextuse();
 
   const handleSubmit = async (e, _id) => {
+    setLoading(true);
     e.preventDefault();
-    const data ={
+    const inputVal = {
       name,
       email,
       phone,
       relation,
-    }
+    };
 
+    const filterData = Object.fromEntries(
+      Object.entries(inputVal).filter(([key, value]) => value !== "")
+    );
 
     const token = localStorage.getItem("token");
-    const responce = await axios.patch(
-      `/api/contact/${_id} `,data,
-    
+    const responce = await axios.put(
+      `/api/contact/${_id} `,
+      filterData,
+
       {
         headers: {
           "Content-Type": "application/json",
@@ -64,16 +71,23 @@ export default function FullScreenDialog({ data }) {
         },
       }
     );
-console.log(responce);
-    console.log(email, name, phone, relation);
+    const { data } = responce;
+
+    dispatch({ type: "EDIT_CONTACTS", payload: data });
+
+    setLoading(true);
+    setTimeout(() => {
+      handleClose();
+    }, 1000);
+    closeFunc()
   };
 
   const defaultTheme = createTheme();
   return (
-    <div>
-      <Button sx={{ color: "black" }} onClick={handleClickOpen}>
+    <>
+      <MenuItem sx={{ color: "black"}} onClick={handleClickOpen}>
         Edit
-      </Button>
+      </MenuItem>
       <Dialog
         fullScreen
         open={open}
@@ -93,17 +107,21 @@ console.log(responce);
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
               Update Contacts
             </Typography>
-            <Button autoFocus color="inherit" onClick={handleClose}>
-              save
-            </Button>
+            {loading ? (
+              LoadingTime
+            ) : (
+              <Button
+                autoFocus
+                color="inherit"
+                onClick={(e) => handleSubmit(e, data._id)}
+              >
+                save
+              </Button>
+            )}
           </Toolbar>
         </AppBar>
         <ThemeProvider theme={defaultTheme}>
-          <Container
-            component="main"
-            onSubmit={(e) => handleSubmit(e, data._id)}
-            maxWidth="xs"
-          >
+          <Container component="main" maxWidth="xs">
             <CssBaseline />
             <Box
               sx={{
@@ -122,7 +140,7 @@ console.log(responce);
                       onChange={(e) => setName(e.target.value)}
                       value={name}
                       fullWidth
-                      label={data.name}
+                      label="name"
                       aria-required
                     />
                   </Grid>
@@ -130,9 +148,9 @@ console.log(responce);
                     <TextField
                       fullWidth
                       type="number"
-                      label={data.phone}
                       aria-required
                       value={phone}
+                      label="phone"
                       onChange={(e) => setPhone(e.target.value)}
                     />
                   </Grid>
@@ -173,23 +191,11 @@ console.log(responce);
                     textAlign: "center",
                   }}
                 ></Typography>
-                {/* {loading ? ( */}
-                {/* <LoadingTime /> */}
-                {/* ) : ( */}
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  sx={{ mt: 3, mb: 2 }}
-                >
-                  Update Contact
-                </Button>
-                {/* )} */}
               </Box>
             </Box>
           </Container>
         </ThemeProvider>
       </Dialog>
-    </div>
+    </>
   );
 }

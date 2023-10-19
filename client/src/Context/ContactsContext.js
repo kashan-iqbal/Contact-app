@@ -3,9 +3,10 @@ import { ContactReducer } from "./Reducer";
 
 const UserContext = createContext();
 
-const UserContextProvider = ({ children }) => {
+const ContactContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(ContactReducer, {
     Contacts: null,
+    favContacts:[]
   });
   return (
     <UserContext.Provider value={{ ...state, dispatch }}>
@@ -14,7 +15,7 @@ const UserContextProvider = ({ children }) => {
   );
 };
 
-export default UserContextProvider;
+export default ContactContextProvider;
 
 export const UserContextuse = () => {
   return useContext(UserContext);

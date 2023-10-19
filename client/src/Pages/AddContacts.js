@@ -68,10 +68,8 @@ export default function AddContacts() {
         console.log("Responce", responce);
         if (responce && responce) {
           const { data } = responce;
-
-          if (data && data) {
             dispatch({ type: "Add_Contacts", payload: data });
-          }
+        
         }
         setName("");
         setEmail("");
@@ -89,7 +87,6 @@ export default function AddContacts() {
 
   return (
     <Layout>
-      <ThemeProvider theme={defaultTheme}>
         <Container component="main" maxWidth="xs">
           <CssBaseline />
           <Box
@@ -100,22 +97,11 @@ export default function AddContacts() {
               alignItems: "center",
             }}
           >
-            <ToastContainer
-              position="top-center"
-              autoClose={2000}
-              hideProgressBar={false}
-              newestOnTop={false}
-              closeOnClick
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              pauseOnHover
-              theme="dark"
-            />
+    
             <Typography component="h1" variant="h5" sx={{ fontWeight: "600" }}>
               Create Contacts
             </Typography>
-            <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
+            <Box component="form"  sx={{ mt: 3 }}>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
                   <TextField
@@ -182,6 +168,7 @@ export default function AddContacts() {
                   fullWidth
                   variant="contained"
                   sx={{ mt: 3, mb: 2 }}
+                  onClick={handleSubmit}
                 >
                   New Contact
                 </Button>
@@ -190,7 +177,6 @@ export default function AddContacts() {
           </Box>
           <Copyright sx={{ mt: 15 }} />
         </Container>
-      </ThemeProvider>
     </Layout>
   );
 }

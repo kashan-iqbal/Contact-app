@@ -13,7 +13,7 @@ router.route("/:id").get(getContactsById);
 
 router.route("/").post(createContacts);
 
-router.route("/:id").patch(updateContacts);
+router.route("/:id").put(updateContacts);
 
 router.route("/:id").delete(deleteContacts);
 

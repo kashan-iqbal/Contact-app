@@ -10,6 +10,8 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate } from "react-router-dom";
+import { useUserContext } from "../Context/UserContext";
+
 function Copyright(props) {
   return (
     <Typography
@@ -33,6 +35,8 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function Profilepage() {
+const {User} = useUserContext()
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -48,11 +52,9 @@ export default function Profilepage() {
   const handleBack = () => {
     navigate(-1);
   };
-   const proflieData = JSON.parse(localStorage.getItem('userData'))
-
-   console.log(proflieData);
 
 
+console.log(User," am profile");
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -97,7 +99,7 @@ export default function Profilepage() {
                     readOnly: true,
                   }}
                   variant="outlined"
-                  value={proflieData.username}
+                  value={User.username}
                 />
               </Grid>
               <Grid item xs={6} sm={6}>
@@ -108,7 +110,7 @@ export default function Profilepage() {
                   name="lastName"
                   autoComplete="family-name"
                   label="Last Name"
-                  value={proflieData.usernamelast}
+                  value={User.usernamelast}
                   inputProps={{
                     readOnly: true,
                   }}
@@ -122,7 +124,7 @@ export default function Profilepage() {
                   name="email"
                   label="E-mail"
                   autoComplete="email"
-                  value={proflieData.email}
+                  value={User.email}
                   inputProps={{
                     readOnly: true,
                   }}
@@ -139,7 +141,7 @@ export default function Profilepage() {
                   id="password"
                   label="Phone Number"
                   autoComplete="new-password"
-                  value={proflieData.phoneNumber}
+                  value={User.phoneNumber}
                   inputProps={{
                     readOnly: true,
                   }}

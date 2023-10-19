@@ -5,6 +5,8 @@ import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Dailogbox from "./DailogBox";
 import FullScreenDialog from "./EditModal";
+import { UserContextuse } from "../Context/ContactsContext";
+import { styled } from '@mui/material/styles';
 
 const ITEM_HEIGHT = 48;
 
@@ -17,7 +19,25 @@ export default function ListBtn({ data }) {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const { dispatch, favContacts } = UserContextuse();
 
+  const AddTofavorite = (e, data) => {
+    e.preventDefault();
+    if (data && data) {
+      const alreaduInFav = favContacts.some((ele) => ele._id === data._id);
+      if (alreaduInFav) {
+        alert("Already in favorite");
+        handleClose();
+      } else {
+        dispatch({ type: "FAVORITE_CONTACTS", payload: data });
+        console.log(data);
+        handleClose();
+      }
+    }
+  };
+
+
+  
   return (
     <div>
       <IconButton
@@ -45,9 +65,9 @@ export default function ListBtn({ data }) {
           },
         }}
       >
-        <FullScreenDialog closeFunc={handleClose} data={data} />
+        <FullScreenDialog  closeFunc={handleClose} data={data} />
         <Dailogbox closeFunc={handleClose} data={data} />
-        <MenuItem onClick={handleClose}>Favorite</MenuItem>
+        <MenuItem onClick={(e) => AddTofavorite(e, data)}>Favorite</MenuItem>
       </Menu>
     </div>
   );

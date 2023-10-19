@@ -84,9 +84,9 @@ const updateContacts = async (req, res) => {
 
   try {
     const contact = await Contacts.findOneAndUpdate(
-      { _id: id },
-      { $set: { "objectName": req.body.objectName } },
-      { returnNewDocument: true }
+      { _id: id }, // Additional criteria to match the user_id
+      { $set:  req.body },
+      { new: true } // Return the updated documen
     );
     if (!contact) {
       res.status(404).json({ message: "Contact not found" });
