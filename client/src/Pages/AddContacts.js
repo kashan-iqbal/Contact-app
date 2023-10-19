@@ -13,7 +13,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Layout from "../Component/Layout";
 import LoadingTime from "../Uitls/Loading";
-
+import { UserContextuse } from "../Context/ContactsContext";
 function Copyright(props) {
   return (
     <Typography
@@ -42,6 +42,9 @@ export default function AddContacts() {
   const [phone, setPhone] = useState("");
   const [relation, setRelation] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const { dispatch } = UserContextuse();
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const token = localStorage.getItem("token");
@@ -51,31 +54,39 @@ export default function AddContacts() {
       phone,
       relation,
     };
-    try {
-      setLoading(true)
-      const responce = await axios.post("/api/contact/", data, {
-        headers: {
-          "Content-Type": "application/json",
-          authorization: `Bearer ${token}`,
-        },
-      });
-      console.log("Responce", responce);
-      setName("");
-      setEmail("");
-      setPhone("");
-      setRelation("");
-      toast.success("Contact created");
-      setLoading(false)
-    } catch (error) {
-      console.log(error);
-      toast.error("some thing weng wrong");
-      setLoading(false)
+    if (phone.length !== 11) {
+      alert("Number should be 11 digit");
+    } else {
+      try {
+        setLoading(true);
+        const responce = await axios.post("/api/contact/", data, {
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${token}`,
+          },
+        });
+        console.log("Responce", responce);
+        if (responce && responce) {
+          const { data } = responce;
+            dispatch({ type: "Add_Contacts", payload: data });
+        
+        }
+        setName("");
+        setEmail("");
+        setPhone("");
+        setRelation("");
+        toast.success("Contact created");
+        setLoading(false);
+      } catch (error) {
+        console.log(error);
+        toast.error("some thing weng wrong");
+        setLoading(false);
+      }
     }
   };
 
   return (
     <Layout>
-      <ThemeProvider theme={defaultTheme}>
         <Container component="main" maxWidth="xs">
           <CssBaseline />
           <Box
@@ -86,22 +97,11 @@ export default function AddContacts() {
               alignItems: "center",
             }}
           >
-            <ToastContainer 
-                 position="top-center"
-                 autoClose={2000}
-                 hideProgressBar={false}
-                 newestOnTop={false}
-                 closeOnClick
-                 rtl={false}
-                 pauseOnFocusLoss
-                 draggable
-                 pauseOnHover
-                 theme="dark"
-            />
+    
             <Typography component="h1" variant="h5" sx={{ fontWeight: "600" }}>
               Create Contacts
             </Typography>
-            <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
+            <Box component="form"  sx={{ mt: 3 }}>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
                   <TextField
@@ -168,6 +168,7 @@ export default function AddContacts() {
                   fullWidth
                   variant="contained"
                   sx={{ mt: 3, mb: 2 }}
+                  onClick={handleSubmit}
                 >
                   New Contact
                 </Button>
@@ -176,7 +177,6 @@ export default function AddContacts() {
           </Box>
           <Copyright sx={{ mt: 15 }} />
         </Container>
-      </ThemeProvider>
     </Layout>
   );
 }

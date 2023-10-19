@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -26,9 +26,7 @@ import {
   InputLabel,
   OutlinedInput,
 } from "@mui/material";
-import { UserContext } from "../../Context/UserContext";
-
-
+import { useUserContext } from "../../Context/UserContext";
 
 function Copyright(props) {
   return (
@@ -59,11 +57,11 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
+  const { dispatch } = useUserContext();
+
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
-
-  const { setUserData } = useContext(UserContext);
 
   const Navigate = useNavigate();
   const handleSubmit = async (event) => {
@@ -71,12 +69,17 @@ export default function Login() {
     setLoading(true);
     try {
       const responce = await axios.post("/api/user/login", { email, password });
+      const { data } = responce;
       toast.success("login successfully");
       setTimeout(() => {
         Navigate("/Home");
       }, 1000);
-      const { data } = responce;
-      setUserData(data.user);
+      const User = data.user;
+      const updatedUser = {
+        ...User,
+        password: undefined,
+      };
+      dispatch({ type: "CURRENT_USER", payload: updatedUser });
       localStorage.setItem("token", data.accessToken);
       setLoading(false);
     } catch (error) {
@@ -180,9 +183,13 @@ export default function Login() {
                 </Link>
               </Grid>
               <Grid item>
-              Don't have an account? 
-                <NavLink to={"/"} variant="body2" style={{textDecoration:"none"}}>
-               Sign Up
+                Don't have an account?
+                <NavLink
+                  to={"/"}
+                  variant="body2"
+                  style={{ textDecoration: "none" }}
+                >
+                  Sign Up
                 </NavLink>
               </Grid>
             </Grid>

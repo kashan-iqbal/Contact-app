@@ -1,18 +1,16 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import UserContextProvider from './Context/UserContext';
-import App from './App';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import ContactContextProvider from "./Context/ContactsContext";
+import { UserContextProvider } from "./Context/UserContext";
 
-
-
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-
   <React.StrictMode>
-    <UserContextProvider>
-    <App />
-    </UserContextProvider>
+    <ContactContextProvider>
+      <UserContextProvider>
+        <App />
+      </UserContextProvider>
+    </ContactContextProvider>
   </React.StrictMode>
-
 );
-

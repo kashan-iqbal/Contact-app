@@ -1,18 +1,16 @@
-import * as React from 'react';
-import IconButton from '@mui/material/IconButton';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-
-const options = [
-  'Edit',
-  'Favorite',
-  'Delete'
-];
+import * as React from "react";
+import IconButton from "@mui/material/IconButton";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import Dailogbox from "./DailogBox";
+import FullScreenDialog from "./EditModal";
+import { UserContextuse } from "../Context/ContactsContext";
+import { styled } from '@mui/material/styles';
 
 const ITEM_HEIGHT = 48;
 
-export default function ListBtn() {
+export default function ListBtn({ data }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -21,14 +19,32 @@ export default function ListBtn() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const { dispatch, favContacts } = UserContextuse();
 
+  const AddTofavorite = (e, data) => {
+    e.preventDefault();
+    if (data && data) {
+      const alreaduInFav = favContacts.some((ele) => ele._id === data._id);
+      if (alreaduInFav) {
+        alert("Already in favorite");
+        handleClose();
+      } else {
+        dispatch({ type: "FAVORITE_CONTACTS", payload: data });
+        console.log(data);
+        handleClose();
+      }
+    }
+  };
+
+
+  
   return (
     <div>
       <IconButton
         aria-label="more"
         id="long-button"
-        aria-controls={open ? 'long-menu' : undefined}
-        aria-expanded={open ? 'true' : undefined}
+        aria-controls={open ? "long-menu" : undefined}
+        aria-expanded={open ? "true" : undefined}
         aria-haspopup="true"
         onClick={handleClick}
       >
@@ -37,7 +53,7 @@ export default function ListBtn() {
       <Menu
         id="long-menu"
         MenuListProps={{
-          'aria-labelledby': 'long-button',
+          "aria-labelledby": "long-button",
         }}
         anchorEl={anchorEl}
         open={open}
@@ -45,15 +61,13 @@ export default function ListBtn() {
         PaperProps={{
           style: {
             maxHeight: ITEM_HEIGHT * 4.5,
-            width: '20ch',
+            width: "20ch",
           },
         }}
       >
-        {options.map((option) => (
-          <MenuItem key={option} selected={option === 'Pyxis'} onClick={handleClose}>
-            {option}
-          </MenuItem>
-        ))}
+        <FullScreenDialog  closeFunc={handleClose} data={data} />
+        <Dailogbox closeFunc={handleClose} data={data} />
+        <MenuItem onClick={(e) => AddTofavorite(e, data)}>Favorite</MenuItem>
       </Menu>
     </div>
   );

@@ -8,7 +8,7 @@ const asyncHandler = require("express-async-handler");
 
 const getAllContacts = async (req, res) => {
   try {
-    const contact = await Contacts.find({ user_id: req.user.id });
+    const contact = await Contacts.find({ user_id: req.user.id }).sort("name")
     res.status(201).json(contact);
   } catch (err) {
     console.log(err);
@@ -84,25 +84,23 @@ const updateContacts = async (req, res) => {
 
   try {
     const contact = await Contacts.findOneAndUpdate(
-      { _id: id },
-      {
-        ...req.body,
-      }
+      { _id: id }, // Additional criteria to match the user_id
+      { $set:  req.body },
+      { new: true } // Return the updated documen
     );
     if (!contact) {
-      res.status(404).json({ message: "contacts is avaible" });
+      res.status(404).json({ message: "Contact not found" });
       return;
     }
     if (contact.user_id.toString() !== req.user.id) {
-      res
-        .status(404)
-        .json({ message: "you are not b able to update this contact" });
+      res.status(403).json({ message: "Unauthorized to update this contact" });
       return;
     }
 
-    res.status(201).json(contact);
+    res.send(contact);
   } catch (err) {
-    console.log(err);
+    console.error(err);
+    res.status(500).json({ message: "Error updating contact" });
   }
 };
 
@@ -131,8 +129,7 @@ const deleteContacts = asyncHandler(async (req, res) => {
         .json({ message: "you are not b able to delete this contact" });
       return;
     }
-    const contact = await Contacts.deleteOne({ _id: id });
-
+    const contact = await Contacts.findOneAndDelete({ _id: id });
     res.status(201).json(contact);
   } catch (err) {
     console.log(err);
