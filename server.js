@@ -3,7 +3,7 @@ const  connectDB = require("./ConnectDB/Connect");
 const errorHandler = require("./middleware/errorHandler");
 const dotenv =require("dotenv").config() 
 const cors =require("cors")
-
+const path = require("path")
 const app = express()
 
 
@@ -12,7 +12,7 @@ app.use(cors())
 app.use(`/api/contact`,require("./Route/ContactRoute"))
 app.use("/api/user",require("./Route/userRoute"))
 app.use(errorHandler)
-
+app.use(express.static(path.resolve(__dirname,"./client/build")))
 
 const port = process.env.PORT || 8080
 
