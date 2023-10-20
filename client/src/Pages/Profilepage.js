@@ -11,6 +11,8 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../Context/UserContext";
+import {UserContextuse} from "../Context/ContactsContext"
+
 
 function Copyright(props) {
   return (
@@ -55,6 +57,13 @@ const {User} = useUserContext()
 
 
 console.log(User," am profile");
+
+
+const {Contacts} = UserContextuse()
+const {favContacts} = UserContextuse()
+
+const ContactsLenght = Contacts.length
+const FavContactsLenght = favContacts.length
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -159,7 +168,7 @@ console.log(User," am profile");
                   InputProps={{
                     readOnly: true,
                   }}
-                  value={12}
+                  value={ContactsLenght}
                 />
               </Grid>
               <Grid item xs={6}>
@@ -174,7 +183,7 @@ console.log(User," am profile");
                   InputProps={{
                     readOnly: true,
                   }}
-                  value={12}
+                  value={FavContactsLenght}
                 />
               </Grid>
             </Grid>
