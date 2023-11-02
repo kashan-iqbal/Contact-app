@@ -27,7 +27,7 @@ const registeruser = asycnHandler(async (req, res) => {
     phoneNumber,
     password: hashedPassword,
   });
-
+console.log(user,"aya k nhi")
   if (user) {
     return res.status(200).send({ user, success: true });
   } else {
@@ -63,7 +63,7 @@ const loginuser = async (req, res) => {
       process.env.ACCESS_TOKEN,
       { expiresIn: "300m" }
     );
-    res.status(201).send({ accessToken, user });
+    res.status(201).send(accessToken );
   } else {
     res.status(401).json({ message: "your password is incorrect" });
     return;
@@ -74,8 +74,12 @@ const loginuser = async (req, res) => {
 //@get /api/user
 //@access private
 
-const currentUser = (req, res) => {
-  res.status(201).json(req.user);
+const currentUser = async (req, res) => {
+
+  const currentUser =await User.findById( req.user.id)
+
+  
+  res.status(201).send(currentUser);
 };
 
 //@desc update password

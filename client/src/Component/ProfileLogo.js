@@ -18,7 +18,12 @@ import { useUserContext } from "../Context/UserContext";
 
 export default function ProfileLogo() {
   const [anchorEl, setAnchorEl] = React.useState(null);
+
   const { User } = useUserContext();
+
+  const getName = () => {
+    return User && User.username.charAt(0).toUpperCase();
+  };
 
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -28,8 +33,6 @@ export default function ProfileLogo() {
     setAnchorEl(null);
   };
 
-  const logoName =
-    User && User.username ? User.username.charAt(0).toUpperCase() : " ";
   const Navigate = useNavigate();
 
   const logout = () => {
@@ -39,6 +42,9 @@ export default function ProfileLogo() {
     }, 2000);
     toast.success("logout successFully");
   };
+
+  const loggName = getName()
+
 
   return (
     <React.Fragment>
@@ -54,7 +60,7 @@ export default function ProfileLogo() {
           >
             <ToastContainer />
             <Avatar sx={{ width: 32, height: 32, bgcolor: "green" }}>
-              {logoName}
+              {loggName}
             </Avatar>
           </IconButton>
         </Tooltip>

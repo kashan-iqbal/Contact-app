@@ -5,7 +5,7 @@ const UserContext = createContext();
 
 export const UserContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(UserReducer, {
-    User: null,
+    User:null,
   });
   return (
     <UserContext.Provider value={{ ...state, dispatch }}>

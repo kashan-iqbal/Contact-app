@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
@@ -11,10 +11,12 @@ import { touppercase, network, color } from "../Uitls/Function";
 import axios from "axios";
 import ListBtn from "../Component/ListBtn";
 import { UserContextuse } from "../Context/ContactsContext";
+import moment from 'moment'
 
 export default function Home() {
-  const { Contacts, dispatch } = UserContextuse();
+  const [loading, setLoading] = useState(false);
 
+  const { Contacts, dispatch } = UserContextuse();
   if (Contacts) {
     Contacts.sort((a, b) => a.name.localeCompare(b.name));
   }
@@ -22,6 +24,7 @@ export default function Home() {
   useEffect(() => {
     const getContacts = async () => {
       try {
+        setLoading(true);
         const token = localStorage.getItem("token");
         const responce = await axios.get("/api/contact/", {
           headers: {
@@ -33,8 +36,10 @@ export default function Home() {
         if (data && data) {
           dispatch({ type: "Set_Contacts", payload: data });
         }
+        setLoading(false);
       } catch (error) {
         console.log(error.message);
+        setLoading(false);
       }
     };
     getContacts();
@@ -49,35 +54,46 @@ export default function Home() {
           {Contacts?.map((data, idx) => (
             <ListItem alignItems="flex-start" key={idx}>
               <ListItemAvatar>
-                {data ? (
+                {loading ? (
+                  <Skeleton animation="wave"  variant="circular" width={40} height={40} />
+                ) : (
                   <Avatar
                     sx={{ backgroundColor: `${color()}` }}
                     alt={touppercase(data.name)}
                     src=""
-                  />
-                ) : (
-                  <Skeleton variant="circular" width={40} height={40} />
+                  >
+                    {touppercase(data.name.split("")[0].toUpperCase())}
+                  </Avatar>
                 )}
               </ListItemAvatar>
-              <ListItemText
-                primary={
-                  <Typography sx={{ fontWeight: "600" }}>
-                    {touppercase(data && data.name)}
-                  </Typography>
-                }
-                secondary={
-                  <React.Fragment>
-                    <Typography
-                      sx={{ display: "inline" }}
-                      component="span"
-                      variant="body2"
-                      color="gray"
-                    >
-                      {network(data && data.phone.slice(2, 4))}
+              {loading ? (
+                <Skeleton
+                  animation="wave"
+                  variant="rectangular"
+                  width="100%"
+                  height={40}
+                />
+              ) : (
+                <ListItemText
+                  primary={
+                    <Typography sx={{ fontWeight: "600" }}>
+                      {touppercase(data && data.name)}
                     </Typography>
-                  </React.Fragment>
-                }
-              />
+                  }
+                  secondary={
+                    <React.Fragment>
+                      <Typography
+                        sx={{ display: "inline" }}
+                        component="p"
+                        variant="body2"
+                        color="gray"
+                      >
+                        {  network(data && data.phone.slice(2, 4))?network(data && data.phone.slice(2, 4)) :"Not Define"}
+                      </Typography>
+                    </React.Fragment>
+                  }
+                />
+              )}
 
               <ListBtn key={idx} data={data} />
             </ListItem>

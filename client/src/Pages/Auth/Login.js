@@ -26,7 +26,6 @@ import {
   InputLabel,
   OutlinedInput,
 } from "@mui/material";
-import { useUserContext } from "../../Context/UserContext";
 
 function Copyright(props) {
   return (
@@ -57,7 +56,6 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
-  const { dispatch } = useUserContext();
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
@@ -74,13 +72,7 @@ export default function Login() {
       setTimeout(() => {
         Navigate("/Home");
       }, 1000);
-      const User = data.user;
-      const updatedUser = {
-        ...User,
-        password: undefined,
-      };
-      dispatch({ type: "CURRENT_USER", payload: updatedUser });
-      localStorage.setItem("token", data.accessToken);
+      localStorage.setItem("token", data);
       setLoading(false);
     } catch (error) {
       toast.error("use correct email or password");

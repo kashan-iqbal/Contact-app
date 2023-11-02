@@ -67,32 +67,35 @@ export default function Siginup() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
+    console.log(username,usernamelast,email,phoneNumber,password);
     if (password.length < 8) {
       alert("password must grater then 8 character");
       setLoading(false);
     } else {
       try {
-        const respoce = await axios.post("/api/user/register", {
+        const {data} = await axios.post("/api/user/register", {
           username,
           usernamelast,
           email,
           phoneNumber,
           password,
         });
-        console.log(respoce, " ia m respnoce");
-        if (respoce.data.success === true) {
+        console.log(data, " ia m respnoce");
+        if (data.success === true) {
           toast.success("Signup SuccessFully");
           setTimeout(() => {
             navigate("/login");
           }, 1000);
           setLoading(false);
         } else {
-          toast.error(respoce.data.message);
-          console.log(respoce.data.message, "i am else");
+          toast.error(data.message);
+          console.log(data.message, "i am else")
           setLoading(false);
         }
       } catch (data) {
+        console.log(data);
         console.log(data.message, "i am catch");
+        setLoading(false)
       }
     }
   };

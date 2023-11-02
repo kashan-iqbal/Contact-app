@@ -1,4 +1,4 @@
-import React  from "react";
+import React, { useEffect } from "react";
 import Avatar from "@mui/material/Avatar";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
@@ -11,8 +11,8 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../Context/UserContext";
-import {UserContextuse} from "../Context/ContactsContext"
-
+import { UserContextuse } from "../Context/ContactsContext";
+import axios from "axios";
 
 function Copyright(props) {
   return (
@@ -37,8 +37,6 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function Profilepage() {
-const {User} = useUserContext()
-
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -48,22 +46,31 @@ const {User} = useUserContext()
     });
   };
 
-  // console.log(userData);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleBack = () => {
     navigate(-1);
   };
 
+  const { Contacts, favContacts } = UserContextuse();
+  const { User, dispatch } = useUserContext();
+  const ContactsLenght = Contacts && Contacts.length;
+  const FavContactsLenght = favContacts && favContacts.length;
 
-console.log(User," am profile");
+  const getUserData = async () => {
+    let token = localStorage.getItem("token");
+    const { data } = await axios.get(`api/user/current`, {
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${token}`,
+      },
+    });
+    if (data && data) {
+      dispatch({ type: "CURRENT_USER", payload: data });
+    }
+  };
 
-
-const {Contacts} = UserContextuse()
-const {favContacts} = UserContextuse()
-
-const ContactsLenght = Contacts.length
-const FavContactsLenght = favContacts.length
+  getUserData();
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -108,7 +115,8 @@ const FavContactsLenght = favContacts.length
                     readOnly: true,
                   }}
                   variant="outlined"
-                  value={User.username}
+                  value={User && User.username}
+                  focused
                 />
               </Grid>
               <Grid item xs={6} sm={6}>
@@ -119,10 +127,11 @@ const FavContactsLenght = favContacts.length
                   name="lastName"
                   autoComplete="family-name"
                   label="Last Name"
-                  value={User.usernamelast}
+                  value={User && User.usernamelast}
                   inputProps={{
                     readOnly: true,
                   }}
+                  focused
                 />
               </Grid>
               <Grid item xs={12}>
@@ -133,7 +142,7 @@ const FavContactsLenght = favContacts.length
                   name="email"
                   label="E-mail"
                   autoComplete="email"
-                  value={User.email}
+                  value={User && User.email}
                   inputProps={{
                     readOnly: true,
                   }}
@@ -150,10 +159,11 @@ const FavContactsLenght = favContacts.length
                   id="password"
                   label="Phone Number"
                   autoComplete="new-password"
-                  value={User.phoneNumber}
+                  value={User && User.phoneNumber}
                   inputProps={{
                     readOnly: true,
                   }}
+                  focused
                 />
               </Grid>
               <Grid item xs={6}>
